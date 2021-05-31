@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { setScreen } from '@eeacms/volto-block-style/actions';
+import { setScreen } from '../actions';
 import { detectTouchScreen } from '../utils';
 
 const pixelToNumber = (pixel) => {
