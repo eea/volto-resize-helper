@@ -17,7 +17,7 @@ const debounce = (func) => {
   let timer;
   return (event) => {
     if (timer) clearTimeout(timer);
-    timer = setTimeout(func, 100, event);
+    timer = setTimeout(func, 350, event);
   };
 };
 
