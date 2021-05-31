@@ -28,7 +28,7 @@ Demo GIF
 1. Start Volto frontend
 
    ```
-   docker run -it --rm -p 3000:3000 --link plone -e ADDONS="@eeacms/volto-addon-template" plone/volto
+   docker run -it --rm -p 3000:3000 --link plone -e ADDONS="@eeacms/volto-resize-helper" plone/volto
    ```
 
 1. Go to http://localhost:3000
@@ -43,11 +43,11 @@ Demo GIF
 
    ```JSON
    "addons": [
-       "@eeacms/volto-addon-template"
+       "@eeacms/volto-resize-helper"
    ],
 
    "dependencies": {
-       "@eeacms/volto-addon-template": "^1.0.0"
+       "@eeacms/volto-resize-helper": "^0.2.0"
    }
    ```
 
@@ -55,7 +55,7 @@ Demo GIF
 
    ```
    npm install -g yo @plone/generator-volto
-   yo @plone/volto my-volto-project --addon @eeacms/volto-addon-template
+   yo @plone/volto my-volto-project --addon @eeacms/volto-resize-helper
    cd my-volto-project
    ```
 
