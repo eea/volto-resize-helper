@@ -2,12 +2,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { setScreen } from '../actions';
+import config from '@plone/volto/registry';
+import { updateScreen } from '../actions';
 import { detectTouchScreen } from '../utils';
-
-const pixelToNumber = (pixel) => {
-  return parseInt(pixel.replace('px', ''));
-};
 
 Number.prototype.toPixel = function toPixel() {
   return `${this}px`;
@@ -17,71 +14,45 @@ const debounce = (func) => {
   let timer;
   return (event) => {
     if (timer) clearTimeout(timer);
-    timer = setTimeout(func, 350, event);
+    timer = setTimeout(func, config.settings.resizeDebounce, event);
   };
 };
 
 const ScreenSize = (props) => {
-  const updateScreen = (e) => {
-    const screenHeight =
-      window.innerHeight ||
-      document.documentElement.clientHeight ||
-      document.body.clientHeight ||
-      0;
-    const screenWidth =
-      window.innerWidth ||
-      document.documentElement.clientWidth ||
-      document.body.clientWidth ||
-      0;
-    const headerWrapper = document.querySelector(
-      '.header-wrapper:not(.mobile)',
-    );
-    const contentArea = document.querySelector('.ui.segment.content-area');
-    const toolbar = document.querySelector('#toolbar .toolbar.expanded');
-    const firstHeading = document.querySelector('.documentFirstHeading');
-    const headerWrapperStyle = headerWrapper
-      ? window.getComputedStyle(headerWrapper)
-      : {};
-    const contentAreaStyle =
-      contentArea && !firstHeading
-        ? window.getComputedStyle(contentArea)
-        : { marginTop: '0px', paddingTop: '0px' };
-
-    const offsetHeight =
-      (headerWrapperStyle.display !== 'none'
-        ? headerWrapper?.offsetHeight || 0
-        : 0) +
-      (pixelToNumber(contentAreaStyle.marginTop) +
-        pixelToNumber(contentAreaStyle.paddingTop) || 0) +
-      ((toolbar?.offsetHeight || 0) < screenHeight
-        ? toolbar?.offsetHeight || 0
-        : 0);
-    const newScreen = {
-      screenHeight,
-      screenWidth,
-      offsetHeight,
+  const updateScreen = (initialState = {}) => {
+    const screen = {
+      height: window.screen.availHeight || 0,
+      width: window.screen.availWidth || 0,
     };
 
-    props.setScreen({ ...props.screen, ...newScreen });
+    const page = {
+      height: window.innerHeight || 0,
+      width: window.innerWidth || 0,
+    };
+
+    const newScreen = {
+      ...initialState,
+      ...screen,
+      page,
+      content: {
+        offsetTop: document.querySelector('div.content-area').offsetTop,
+      },
+    };
+
+    props.updateScreen(newScreen);
   };
 
   React.useEffect(() => {
     if (__CLIENT__) {
-      updateScreen();
-
-      const IS_TOUCHSCREEN = detectTouchScreen();
-      if (IS_TOUCHSCREEN) {
-        window.addEventListener('orientationchange', function () {
-          setTimeout(debounce(updateScreen), 500);
-        });
-      } else {
-        window.addEventListener('resize', debounce(updateScreen));
-      }
+      updateScreen({
+        hasTouchScreen: detectTouchScreen(),
+        browserToolbarHeight: window.outerHeight - window.innerHeight,
+      });
+      window.addEventListener('resize', debounce(updateScreen));
     }
     return () => {
       if (__CLIENT__) {
         window.removeEventListener('resize', debounce(updateScreen));
-        window.removeEventListener('orientationchange', debounce(updateScreen));
       }
     };
     /* eslint-disable-next-line */
@@ -92,9 +63,9 @@ const ScreenSize = (props) => {
 
 export default compose(
   connect(
-    (state, props) => ({
+    (state) => ({
       screen: state.screen,
     }),
-    { setScreen },
+    { updateScreen },
   ),
 )(ScreenSize);
