@@ -4,3 +4,10 @@ export const setScreen = (screen = {}) => {
     screen,
   };
 };
+
+export const updateScreen = (screen = {}) => {
+  return {
+    type: 'UPDATE_SCREEN',
+    screen,
+  };
+};
