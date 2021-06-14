@@ -35,7 +35,8 @@ const ScreenSize = (props) => {
       ...screen,
       page,
       content: {
-        offsetTop: document.querySelector('div.content-area').offsetTop,
+        offsetTop:
+          document.querySelector('div.content-area')?.offsetTop || null,
       },
     };
 
