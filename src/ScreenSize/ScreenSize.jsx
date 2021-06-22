@@ -19,6 +19,9 @@ const debounce = (func) => {
 };
 
 const ScreenSize = (props) => {
+  const mounted = React.useRef(false);
+  const { content = {} } = props;
+
   const updateScreen = (initialState = {}) => {
     const screen = {
       height: window.screen.availHeight || 0,
@@ -45,19 +48,24 @@ const ScreenSize = (props) => {
 
   React.useEffect(() => {
     if (__CLIENT__) {
-      updateScreen({
-        hasTouchScreen: detectTouchScreen(),
-        browserToolbarHeight: window.outerHeight - window.innerHeight,
-      });
-      window.addEventListener('resize', debounce(updateScreen));
+      if (!mounted.current) {
+        updateScreen({
+          hasTouchScreen: detectTouchScreen(),
+          browserToolbarHeight: window.outerHeight - window.innerHeight,
+        });
+        window.addEventListener('resize', debounce(updateScreen));
+      }
+      updateScreen();
     }
+    mounted.current = true;
     return () => {
       if (__CLIENT__) {
         window.removeEventListener('resize', debounce(updateScreen));
       }
+      mounted.current = false;
     };
     /* eslint-disable-next-line */
-  }, []);
+  }, [content['@id']]);
 
   return '';
 };
