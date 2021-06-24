@@ -65,7 +65,7 @@ const ScreenSize = (props) => {
       mounted.current = false;
     };
     /* eslint-disable-next-line */
-  }, [content['@id']]);
+  }, [content?.['@id']]);
 
   return '';
 };
