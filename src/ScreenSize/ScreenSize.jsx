@@ -1,8 +1,8 @@
 /* eslint-disable no-extend-native */
 import React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
+import cs from 'classnames';
 import config from '@plone/volto/registry';
+import { BodyClass } from '@plone/volto/helpers';
 import { updateScreen } from '../actions';
 import { detectTouchScreen } from '../utils';
 
@@ -18,11 +18,16 @@ const debounce = (func) => {
   };
 };
 
-const ScreenSize = (props) => {
-  const mounted = React.useRef(false);
-  const { content = {} } = props;
+class ScreenSize extends React.Component {
+  constructor(props) {
+    super(props);
+    this.updateScreen = this.updateScreen.bind(this);
+    this.state = {
+      withScrollbar: false,
+    };
+  }
 
-  const updateScreen = (initialState = {}) => {
+  updateScreen(initialState = {}) {
     const screen = {
       height: window.screen.availHeight || 0,
       width: window.screen.availWidth || 0,
@@ -43,38 +48,49 @@ const ScreenSize = (props) => {
       },
     };
 
-    props.updateScreen(newScreen);
-  };
-
-  React.useEffect(() => {
-    if (__CLIENT__) {
-      if (!mounted.current) {
-        updateScreen({
-          hasTouchScreen: detectTouchScreen(),
-          browserToolbarHeight: window.outerHeight - window.innerHeight,
-        });
-        window.addEventListener('resize', debounce(updateScreen));
-      }
-      updateScreen();
+    if (
+      document.body.scrollHeight > document.body.clientHeight &&
+      !this.state.withScrollbar
+    ) {
+      this.setState({ withScrollbar: true });
+    } else if (
+      document.body.scrollHeight <= document.body.clientHeight &&
+      this.state.withScrollbar
+    ) {
+      this.setState({ withScrollbar: false });
     }
-    mounted.current = true;
-    return () => {
-      if (__CLIENT__) {
-        window.removeEventListener('resize', debounce(updateScreen));
-      }
-      mounted.current = false;
-    };
-    /* eslint-disable-next-line */
-  }, [content?.['@id']]);
 
-  return '';
-};
+    this.props.dispatch(updateScreen(newScreen));
+  }
 
-export default compose(
-  connect(
-    (state) => ({
-      screen: state.screen,
-    }),
-    { updateScreen },
-  ),
-)(ScreenSize);
+  componentDidMount() {
+    if (__SERVER__) return;
+    this.updateScreen({
+      hasTouchScreen: detectTouchScreen(),
+      browserToolbarHeight: window.outerHeight - window.innerHeight,
+    });
+    window.addEventListener('resize', debounce(this.updateScreen));
+  }
+
+  componentWillUnmount() {
+    if (__SERVER__) return;
+    window.removeEventListener('resize', debounce(this.updateScreen));
+  }
+
+  componentDidUpdate(prevProps) {
+    if (__SERVER__) return;
+    if (this.props.content?.['@id'] !== prevProps.content?.['@id']) {
+      this.updateScreen();
+    }
+  }
+
+  render() {
+    return (
+      <BodyClass
+        className={cs({ 'with-scrollbar': this.state.withScrollbar })}
+      />
+    );
+  }
+}
+
+export default ScreenSize;
