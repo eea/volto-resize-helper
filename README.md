@@ -1,17 +1,23 @@
-# volto-addon-template
-[![Releases](https://img.shields.io/github/v/release/eea/volto-addon-template)](https://github.com/eea/volto-addon-template/releases)
-[![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-addon-template%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-addon-template/job/master/display/redirect)
-[![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-addon-template%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-addon-template/job/develop/display/redirect)
+# volto-resize-helper
+[![Releases](https://img.shields.io/github/v/release/eea/volto-resize-helper)](https://github.com/eea/volto-resize-helper/releases)
 
-[Volto](https://github.com/plone/volto) add-on
+[![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-resize-helper%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-resize-helper/job/master/display/redirect)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-master&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-master)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-master&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-master)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-master&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-master)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-master&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-master)
 
-## Features
+[![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-resize-helper%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-resize-helper/job/develop/display/redirect)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-develop)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-develop)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-develop)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-develop)
 
-Demo GIF
+[Volto](https://github.com/plone/volto) add-on: Window resize helper
 
 ## Getting started
 
-### Try volto-addon-template with Docker
+### Try volto-resize-helper with Docker
 
 1. Get the latest Docker images
 
@@ -33,7 +39,7 @@ Demo GIF
 
 1. Go to http://localhost:3000
 
-### Add volto-addon-template to your Volto project
+### Add volto-resize-helper to your Volto project
 
 1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
 
@@ -47,7 +53,7 @@ Demo GIF
    ],
 
    "dependencies": {
-       "@eeacms/volto-resize-helper": "^0.2.0"
+       "@eeacms/volto-resize-helper": "^1.0.0"
    }
    ```
 
@@ -72,15 +78,16 @@ Demo GIF
 
 ## How to contribute
 
-See [DEVELOP.md](https://github.com/eea/volto-addon-template/blob/master/DEVELOP.md).
+See [DEVELOP.md](https://github.com/eea/volto-resize-helper/blob/master/DEVELOP.md).
 
 ## Copyright and license
 
 The Initial Owner of the Original Code is European Environment Agency (EEA).
 All Rights Reserved.
 
-See [LICENSE.md](https://github.com/eea/volto-addon-template/blob/master/LICENSE.md) for details.
+See [LICENSE.md](https://github.com/eea/volto-resize-helper/blob/master/LICENSE.md) for details.
 
 ## Funding
 
 [European Environment Agency (EU)](http://eea.europa.eu)
+u)
