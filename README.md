@@ -18,6 +18,19 @@
 
 ## Getting started
 
+### Usage
+After you add this add-on to your project, the viewport width and height are available as a global state in redux store.
+
+```
+screen : {
+hasTouchScreen: Boolean
+browserToolbarHeight : Number
+height: Number
+width: Number
+
+}
+```
+
 ### Try volto-resize-helper with Docker
 
 1. Get the latest Docker images
