@@ -6,9 +6,11 @@ import { BodyClass } from '@plone/volto/helpers';
 import { updateScreen } from '../actions';
 import { detectTouchScreen } from '../utils';
 
-Number.prototype.toPixel = function toPixel() {
-  return `${this}px`;
-};
+if (!Number.prototype.toPixel) {
+  Number.prototype.toPixel = function toPixel() {
+    return `${this}px`;
+  };
+}
 
 const debounce = (func) => {
   let timer;
@@ -28,14 +30,16 @@ class ScreenSize extends React.Component {
   }
 
   updateScreen(initialState = {}) {
+    const documentElement = document.documentElement;
     const screen = {
-      height: window.screen.availHeight || 0,
-      width: window.screen.availWidth || 0,
+      height: window.screen.availHeight,
+      width: window.screen.availWidth,
     };
 
     const page = {
-      height: window.innerHeight || 0,
-      width: window.innerWidth || 0,
+      height: window.innerHeight,
+      width: window.innerWidth,
+      scrollbarWidth: window.innerWidth - documentElement.offsetWidth,
     };
 
     const newScreen = {
@@ -43,22 +47,28 @@ class ScreenSize extends React.Component {
       ...screen,
       page,
       content: {
-        offsetTop:
-          document.querySelector('div.content-area')?.offsetTop || null,
+        height: documentElement.offsetHeight,
+        width: documentElement.offsetWidth,
+        offsetTop: document.querySelector('div.content-area')?.offsetTop,
       },
     };
 
     if (
-      document.body.scrollHeight > document.body.clientHeight &&
+      documentElement.scrollHeight > documentElement.clientHeight &&
       !this.state.withScrollbar
     ) {
       this.setState({ withScrollbar: true });
     } else if (
-      document.body.scrollHeight <= document.body.clientHeight &&
+      documentElement.scrollHeight <= documentElement.clientHeight &&
       this.state.withScrollbar
     ) {
       this.setState({ withScrollbar: false });
     }
+
+    documentElement.style.setProperty(
+      '--scrollbar-width',
+      page.scrollbarWidth.toPixel(),
+    );
 
     this.props.dispatch(updateScreen(newScreen));
   }
@@ -70,11 +80,13 @@ class ScreenSize extends React.Component {
       browserToolbarHeight: window.outerHeight - window.innerHeight,
     });
     window.addEventListener('resize', debounce(this.updateScreen));
+    window.addEventListener('scroll', debounce(this.updateScreen));
   }
 
   componentWillUnmount() {
     if (__SERVER__) return;
     window.removeEventListener('resize', debounce(this.updateScreen));
+    window.removeEventListener('scroll', debounce(this.updateScreen));
   }
 
   componentDidUpdate(prevProps) {
