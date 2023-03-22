@@ -6,7 +6,7 @@ export default (config) => {
   config.settings.appExtras = [
     ...(config.settings.appExtras || []),
     {
-      match: '/**',
+      match: '',
       component: ScreenSize,
     },
   ];

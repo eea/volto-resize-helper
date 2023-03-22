@@ -1,10 +1,12 @@
 /* eslint-disable no-extend-native */
 import React from 'react';
+import { compose } from 'redux';
 import cs from 'classnames';
 import config from '@plone/volto/registry';
 import { BodyClass } from '@plone/volto/helpers';
 import { updateScreen } from '../actions';
 import { detectTouchScreen } from '../utils';
+import { withScreenSize } from '../hocs';
 
 if (!Number.prototype.toPixel) {
   Number.prototype.toPixel = function toPixel() {
@@ -34,6 +36,7 @@ class ScreenSize extends React.Component {
     const screen = {
       height: window.screen.availHeight,
       width: window.screen.availWidth,
+      browserToolbarHeight: window.outerHeight - window.innerHeight,
     };
 
     const page = {
@@ -77,16 +80,15 @@ class ScreenSize extends React.Component {
     if (__SERVER__) return;
     this.updateScreen({
       hasTouchScreen: detectTouchScreen(),
-      browserToolbarHeight: window.outerHeight - window.innerHeight,
     });
     window.addEventListener('resize', debounce(this.updateScreen));
-    window.addEventListener('scroll', debounce(this.updateScreen));
+    // window.addEventListener('scroll', debounce(this.updateScreen));
   }
 
   componentWillUnmount() {
     if (__SERVER__) return;
     window.removeEventListener('resize', debounce(this.updateScreen));
-    window.removeEventListener('scroll', debounce(this.updateScreen));
+    // window.removeEventListener('scroll', debounce(this.updateScreen));
   }
 
   componentDidUpdate(prevProps) {
@@ -105,4 +107,4 @@ class ScreenSize extends React.Component {
   }
 }
 
-export default ScreenSize;
+export default compose(withScreenSize)(ScreenSize);
