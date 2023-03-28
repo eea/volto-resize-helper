@@ -33,6 +33,9 @@ class ScreenSize extends React.Component {
 
   updateScreen(initialState = {}) {
     const documentElement = document.documentElement;
+    const vw = document.documentElement.offsetWidth * 0.01;
+    const vh = document.documentElement.offsetHeight * 0.01;
+
     const screen = {
       height: window.screen.availHeight,
       width: window.screen.availWidth,
@@ -43,6 +46,8 @@ class ScreenSize extends React.Component {
       height: window.innerHeight,
       width: window.innerWidth,
       scrollbarWidth: window.innerWidth - documentElement.offsetWidth,
+      vw,
+      vh,
     };
 
     const newScreen = {
@@ -72,15 +77,19 @@ class ScreenSize extends React.Component {
       '--scrollbar-width',
       page.scrollbarWidth.toPixel(),
     );
+    documentElement.style.setProperty('--vw', `${vw}px`);
+    documentElement.style.setProperty('--vh', `${vh}px`);
 
     this.props.dispatch(updateScreen(newScreen));
   }
 
   componentDidMount() {
     if (__SERVER__) return;
-    this.updateScreen({
-      hasTouchScreen: detectTouchScreen(),
-    });
+    setTimeout(() => {
+      this.updateScreen({
+        hasTouchScreen: detectTouchScreen(),
+      });
+    }, 0);
     window.addEventListener('resize', debounce(this.updateScreen));
     // window.addEventListener('scroll', debounce(this.updateScreen));
   }
