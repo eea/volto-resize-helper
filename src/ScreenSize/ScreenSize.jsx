@@ -26,59 +26,75 @@ class ScreenSize extends React.Component {
   constructor(props) {
     super(props);
     this.updateScreen = this.updateScreen.bind(this);
-    this.state = {
-      withScrollbar: false,
-    };
   }
 
   updateScreen(initialState = {}) {
-    const documentElement = document.documentElement;
-    const vw = document.documentElement.offsetWidth * 0.01;
-    const vh = document.documentElement.offsetHeight * 0.01;
-
-    const screen = {
-      height: window.screen.availHeight,
-      width: window.screen.availWidth,
-      browserToolbarHeight: window.outerHeight - window.innerHeight,
+    // https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport
+    // This containse the visual viewport sizes
+    // Note: the visual viewport is changing when zoomed in / out
+    const visualViewport = {
+      height: window.visualViewport.height,
+      width: window.visualViewport.width,
+      scale: window.visualViewport.scale,
+      offsetLeft: window.visualViewport.offsetLeft,
+      offsetTop: window.visualViewport.offsetTop,
+      pageLeft: window.visualViewport.pageLeft,
+      pageTop: window.visualViewport.pageTop,
     };
-
-    const page = {
+    // https://developer.mozilla.org/en-US/docs/Glossary/layout_viewport
+    // This contains the layout viewport sizes
+    const layoutViewport = {
       height: window.innerHeight,
       width: window.innerWidth,
-      scrollbarWidth: window.innerWidth - documentElement.offsetWidth,
-      vw,
-      vh,
+    };
+    // https://developer.mozilla.org/en-US/docs/Web/API/Screen
+    // Use this to determine screen size (or device size)
+    const screen = {
+      availHeight: window.screen.availHeight,
+      availWidth: window.screen.availWidth,
+      height: window.screen.height,
+      width: window.screen.width,
+      colorDepth: window.screen.colorDepth,
+      orientation: {
+        angle: window.screen.orientation?.angle,
+        type: window.screen.orientation?.type,
+      },
+      pixelDepth: window.screen.pixelDepth,
+      browserToolbarHeight: window.outerHeight - window.innerHeight,
+    };
+    // https://developer.mozilla.org/en-US/docs/Web/API/Document/documentElement
+    // documentElement offset(Width/Height) includes padding & border. Note: this can be greater then viewport size
+    // documentElement client(Width/Height) includes padding but excludes border / margins / scrollbar. Note: this is not greater then viewport size
+    const documentElement = document.documentElement;
+    const contentElement = document.querySelector('div.content-area');
+
+    const page = {
+      height: documentElement.clientHeight,
+      width: documentElement.clientWidth,
+      scrollbarWidth: layoutViewport.width - documentElement.clientWidth,
+    };
+
+    const content = {
+      width: contentElement?.offsetWidth,
+      offsetTop: contentElement?.offsetTop,
+      offsetLeft: contentElement?.offsetLeft,
     };
 
     const newScreen = {
       ...initialState,
       ...screen,
+      layoutViewport,
       page,
-      content: {
-        height: documentElement.offsetHeight,
-        width: documentElement.offsetWidth,
-        offsetTop: document.querySelector('div.content-area')?.offsetTop,
-      },
+      content,
+      visualViewport,
     };
-
-    if (
-      documentElement.scrollHeight > documentElement.clientHeight &&
-      !this.state.withScrollbar
-    ) {
-      this.setState({ withScrollbar: true });
-    } else if (
-      documentElement.scrollHeight <= documentElement.clientHeight &&
-      this.state.withScrollbar
-    ) {
-      this.setState({ withScrollbar: false });
-    }
 
     documentElement.style.setProperty(
       '--scrollbar-width',
       page.scrollbarWidth.toPixel(),
     );
-    documentElement.style.setProperty('--vw', `${vw}px`);
-    documentElement.style.setProperty('--vh', `${vh}px`);
+    documentElement.style.setProperty('--vw', `${page.width * 0.01}px`);
+    documentElement.style.setProperty('--vh', `${page.height * 0.01}px`);
 
     this.props.dispatch(updateScreen(newScreen));
   }
@@ -110,7 +126,9 @@ class ScreenSize extends React.Component {
   render() {
     return (
       <BodyClass
-        className={cs({ 'with-scrollbar': this.state.withScrollbar })}
+        className={cs({
+          'with-scrollbar': this.props.screen?.page?.scrollbarWidth > 0,
+        })}
       />
     );
   }

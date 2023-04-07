@@ -20,15 +20,55 @@
 
 ### Usage
 
-After you add this add-on to your project, the viewport width and height are available as a global state in redux store.
+After you add this add-on to your project, the screen state is available as a global state in redux store.
 
-```
+**!! Note** that the values inside of screen object are related to the [device / display sizes](https://developer.mozilla.org/en-US/docs/Web/API/Screen), not the browser sizes.
+
+The `layoutViewport` object contains the sizes of the browser with scrollbars.
+
+The `page` object contains the sizes of the browser without scrollbars. Note that the scrollbarWidth is available in `page.scrollbarWidth`.
+
+The `content` object contains the width and offsets of `content-area` element (where blocks are rendered). This is useful for when you want to determine the widths of toolbar / sidebar and height of whatever is rendered above `content-area`.
+
+The `visualViewport` object contains the sizes of the [visual viewport](https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport). Note that the visual viewport is changing when zoomed in / out.
+
+```js
 screen : {
-hasTouchScreen: Boolean
-browserToolbarHeight : Number
-height: Number
-width: Number
-
+   hasTouchScreen: Boolean
+   browserToolbarHeight : Number
+   availHeight: Number,
+   availWidth: Number,
+   height: Number,
+   width: Number,
+   colorDepth: Number,
+   orientation: {
+      angle: Number,
+      type: String, // https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/type
+   },
+   pixelDepth: Number,
+   layoutViewport = {
+      height: Number,
+      width: Number,
+   },
+   page: {
+      height: Number,
+      width: Number,
+      scrollbarWidth: Number,
+   },
+   content = {
+      width: Number,
+      offsetTop: Number,
+      offsetLeft: Number,
+   },
+   visualViewport: {
+      height: Number,
+      width: Number,
+      scale: Number,
+      offsetLeft: Number,
+      offsetTop: Number,
+      pageLeft: Number,
+      pageTop: Number,
+   }
 }
 ```
 
