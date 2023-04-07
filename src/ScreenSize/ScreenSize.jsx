@@ -5,7 +5,7 @@ import cs from 'classnames';
 import config from '@plone/volto/registry';
 import { BodyClass } from '@plone/volto/helpers';
 import { updateScreen } from '../actions';
-import { detectTouchScreen } from '../utils';
+import { detectTouchScreen, getBrowserToolbarWidth } from '../utils';
 import { withScreenSize } from '../hocs';
 
 if (!Number.prototype.toPixel) {
@@ -26,6 +26,7 @@ class ScreenSize extends React.Component {
   constructor(props) {
     super(props);
     this.updateScreen = this.updateScreen.bind(this);
+    this.onScroll = this.onScroll.bind(this);
   }
 
   updateScreen(initialState = {}) {
@@ -60,8 +61,11 @@ class ScreenSize extends React.Component {
         type: window.screen.orientation?.type,
       },
       pixelDepth: window.screen.pixelDepth,
-      browserToolbarHeight: window.outerHeight - window.innerHeight,
     };
+    const browserToolbarHeight = getBrowserToolbarWidth();
+    if (browserToolbarHeight <= this.props.screen.initialBrowserToolbarHeight) {
+      screen.browserToolbarHeight = browserToolbarHeight;
+    }
     // https://developer.mozilla.org/en-US/docs/Web/API/Document/documentElement
     // documentElement offset(Width/Height) includes padding & border. Note: this can be greater then viewport size
     // documentElement client(Width/Height) includes padding but excludes border / margins / scrollbar. Note: this is not greater then viewport size
@@ -99,21 +103,38 @@ class ScreenSize extends React.Component {
     this.props.dispatch(updateScreen(newScreen));
   }
 
+  onScroll() {
+    const browserToolbarHeight =
+      window.screen.height -
+      window.screen.availHeight +
+      window.outerHeight -
+      window.innerHeight;
+
+    if (
+      browserToolbarHeight !== this.props.screen.browserToolbarHeight &&
+      browserToolbarHeight <= this.props.screen.initialBrowserToolbarHeight
+    ) {
+      this.props.dispatch(updateScreen({ browserToolbarHeight }));
+    }
+  }
+
   componentDidMount() {
     if (__SERVER__) return;
     setTimeout(() => {
       this.updateScreen({
         hasTouchScreen: detectTouchScreen(),
+        initialBrowserToolbarHeight: getBrowserToolbarWidth(),
+        browserToolbarHeight: getBrowserToolbarWidth(),
       });
     }, 0);
     window.addEventListener('resize', debounce(this.updateScreen));
-    // window.addEventListener('scroll', debounce(this.updateScreen));
+    window.addEventListener('scroll', this.onScroll);
   }
 
   componentWillUnmount() {
     if (__SERVER__) return;
     window.removeEventListener('resize', debounce(this.updateScreen));
-    // window.removeEventListener('scroll', debounce(this.updateScreen));
+    window.removeEventListener('scroll', this.onScroll);
   }
 
   componentDidUpdate(prevProps) {

@@ -14,3 +14,12 @@ export const detectTouchScreen = () => {
   }
   return hasTouchScreen;
 };
+
+export const getBrowserToolbarWidth = () => {
+  return (
+    window.screen.height -
+    window.screen.availHeight +
+    window.outerHeight -
+    window.innerHeight
+  );
+};
