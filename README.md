@@ -34,6 +34,7 @@ The `visualViewport` object contains the sizes of the [visual viewport](https://
 
 ```js
 screen : {
+   os: String, // This are all the posible values: ['mac', 'ios', 'windows', 'android', 'linux', 'mobile', 'unknown']
    hasTouchScreen: Boolean
    browserToolbarHeight : Number
    availHeight: Number,

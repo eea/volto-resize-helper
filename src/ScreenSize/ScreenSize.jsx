@@ -5,7 +5,7 @@ import cs from 'classnames';
 import config from '@plone/volto/registry';
 import { BodyClass } from '@plone/volto/helpers';
 import { updateScreen } from '../actions';
-import { detectTouchScreen, getBrowserToolbarWidth } from '../utils';
+import { getOSName, detectTouchScreen, getBrowserToolbarWidth } from '../utils';
 import { withScreenSize } from '../hocs';
 
 if (!Number.prototype.toPixel) {
@@ -26,7 +26,6 @@ class ScreenSize extends React.Component {
   constructor(props) {
     super(props);
     this.updateScreen = this.updateScreen.bind(this);
-    this.onScroll = this.onScroll.bind(this);
   }
 
   updateScreen(initialState = {}) {
@@ -103,38 +102,23 @@ class ScreenSize extends React.Component {
     this.props.dispatch(updateScreen(newScreen));
   }
 
-  onScroll() {
-    const browserToolbarHeight =
-      window.screen.height -
-      window.screen.availHeight +
-      window.outerHeight -
-      window.innerHeight;
-
-    if (
-      browserToolbarHeight !== this.props.screen.browserToolbarHeight &&
-      browserToolbarHeight <= this.props.screen.initialBrowserToolbarHeight
-    ) {
-      this.props.dispatch(updateScreen({ browserToolbarHeight }));
-    }
-  }
-
   componentDidMount() {
     if (__SERVER__) return;
     setTimeout(() => {
+      const browserToolbarHeight = getBrowserToolbarWidth();
       this.updateScreen({
+        os: getOSName(),
         hasTouchScreen: detectTouchScreen(),
-        initialBrowserToolbarHeight: getBrowserToolbarWidth(),
-        browserToolbarHeight: getBrowserToolbarWidth(),
+        initialBrowserToolbarHeight: browserToolbarHeight,
+        browserToolbarHeight,
       });
     }, 0);
     window.addEventListener('resize', debounce(this.updateScreen));
-    window.addEventListener('scroll', this.onScroll);
   }
 
   componentWillUnmount() {
     if (__SERVER__) return;
     window.removeEventListener('resize', debounce(this.updateScreen));
-    window.removeEventListener('scroll', this.onScroll);
   }
 
   componentDidUpdate(prevProps) {

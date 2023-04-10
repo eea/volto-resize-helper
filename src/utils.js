@@ -1,3 +1,35 @@
+export const getOSName = () => {
+  const userAgent = window.navigator.userAgent;
+  const platform = window.navigator.platform;
+  const macPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+  const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
+  const iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+  const mobilePlatforms = [
+    'Android',
+    'webOS',
+    'Blackberry',
+    'WindowsPhone',
+    'WindowsCE',
+    'Symbian',
+  ];
+
+  if (macPlatforms.indexOf(platform) !== -1) {
+    return 'mac';
+  } else if (iosPlatforms.indexOf(platform) !== -1) {
+    return 'ios';
+  } else if (windowsPlatforms.indexOf(platform) !== -1) {
+    return 'windows';
+  } else if (/Android/.test(userAgent)) {
+    return 'android';
+  } else if (/Linux/.test(platform)) {
+    return 'linux';
+  } else if (mobilePlatforms.some((mp) => userAgent.indexOf(mp) !== -1)) {
+    return 'mobile';
+  } else {
+    return 'unknown';
+  }
+};
+
 export const detectTouchScreen = () => {
   let hasTouchScreen = false;
   if ('maxTouchPoints' in navigator) {
