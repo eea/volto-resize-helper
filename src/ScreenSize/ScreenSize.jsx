@@ -8,6 +8,8 @@ import { updateScreen } from '../actions';
 import { getOSName, detectTouchScreen, getBrowserToolbarWidth } from '../utils';
 import { withScreenSize } from '../hocs';
 
+let timer;
+
 if (!Number.prototype.toPixel) {
   Number.prototype.toPixel = function toPixel() {
     return `${this}px`;
@@ -15,7 +17,6 @@ if (!Number.prototype.toPixel) {
 }
 
 const debounce = (func) => {
-  let timer;
   return (event) => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(func, config.settings.resizeDebounce, event);
@@ -25,7 +26,28 @@ const debounce = (func) => {
 class ScreenSize extends React.Component {
   constructor(props) {
     super(props);
+    this.onUpdateScreen = this.onUpdateScreen.bind(this);
     this.updateScreen = this.updateScreen.bind(this);
+    this.updateCSSVars = this.updateCSSVars.bind(this);
+    this.init = this.init.bind(this);
+  }
+
+  updateCSSVars() {
+    const documentElement = document.documentElement;
+    const page = {
+      height: documentElement.clientHeight,
+      width: documentElement.clientWidth,
+      scrollbarWidth: window.innerWidth - documentElement.clientWidth,
+    };
+
+    window.requestAnimationFrame(() => {
+      documentElement.style.setProperty(
+        '--scrollbar-width',
+        page.scrollbarWidth.toPixel(),
+      );
+      documentElement.style.setProperty('--vw', `${page.width * 0.01}px`);
+      documentElement.style.setProperty('--vh', `${page.height * 0.01}px`);
+    });
   }
 
   updateScreen(initialState = {}) {
@@ -92,39 +114,42 @@ class ScreenSize extends React.Component {
       visualViewport,
     };
 
-    documentElement.style.setProperty(
-      '--scrollbar-width',
-      page.scrollbarWidth.toPixel(),
-    );
-    documentElement.style.setProperty('--vw', `${page.width * 0.01}px`);
-    documentElement.style.setProperty('--vh', `${page.height * 0.01}px`);
-
     this.props.dispatch(updateScreen(newScreen));
+  }
+
+  onUpdateScreen(event) {
+    this.updateCSSVars();
+    debounce(this.updateScreen)(event);
+  }
+
+  init() {
+    const browserToolbarHeight = getBrowserToolbarWidth();
+    this.updateCSSVars();
+    this.updateScreen({
+      os: getOSName(),
+      hasTouchScreen: detectTouchScreen(),
+      initialBrowserToolbarHeight: browserToolbarHeight,
+      browserToolbarHeight,
+    });
   }
 
   componentDidMount() {
     if (__SERVER__) return;
     setTimeout(() => {
-      const browserToolbarHeight = getBrowserToolbarWidth();
-      this.updateScreen({
-        os: getOSName(),
-        hasTouchScreen: detectTouchScreen(),
-        initialBrowserToolbarHeight: browserToolbarHeight,
-        browserToolbarHeight,
-      });
+      this.init();
     }, 0);
-    window.addEventListener('resize', debounce(this.updateScreen));
+    window.addEventListener('resize', this.onUpdateScreen);
   }
 
   componentWillUnmount() {
     if (__SERVER__) return;
-    window.removeEventListener('resize', debounce(this.updateScreen));
+    window.removeEventListener('resize', this.onUpdateScreen);
   }
 
   componentDidUpdate(prevProps) {
     if (__SERVER__) return;
     if (this.props.content?.['@id'] !== prevProps.content?.['@id']) {
-      this.updateScreen();
+      this.onUpdateScreen();
     }
   }
 
