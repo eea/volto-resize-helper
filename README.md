@@ -140,4 +140,3 @@ See [LICENSE.md](https://github.com/eea/volto-resize-helper/blob/master/LICENSE.
 ## Funding
 
 [European Environment Agency (EU)](http://eea.europa.eu)
-u)
