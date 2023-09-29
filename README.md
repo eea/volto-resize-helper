@@ -16,8 +16,6 @@
 
 [Volto](https://github.com/plone/volto) add-on: Window resize helper
 
-## Getting started
-
 ### Usage
 
 After you add this add-on to your project, the screen state is available as a global state in redux store.
@@ -71,56 +69,47 @@ screen : {
       pageTop: Number,
    }
 }
-```
+
+## Getting started
 
 ### Try volto-resize-helper with Docker
 
-1. Get the latest Docker images
+      git clone https://github.com/eea/volto-resize-helper.git
+      cd volto-resize-helper
+      make
+      make start
 
-   ```
-   docker pull plone
-   docker pull plone/volto
-   ```
-
-1. Start Plone backend
-
-   ```
-   docker run -d --name plone -p 8080:8080 -e SITE=Plone -e PROFILES="profile-plone.restapi:blocks" plone
-   ```
-
-1. Start Volto frontend
-
-   ```
-   docker run -it --rm -p 3000:3000 --link plone -e ADDONS="@eeacms/volto-resize-helper" plone/volto
-   ```
-
-1. Go to http://localhost:3000
+Go to http://localhost:3000
 
 ### Add volto-resize-helper to your Volto project
 
 1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
 
+   ```Bash
+   docker compose up backend
+   ```
+
 1. Start Volto frontend
 
-- If you already have a volto project, just update `package.json`:
+* If you already have a volto project, just update `package.json`:
 
-  ```JSON
-  "addons": [
-      "@eeacms/volto-resize-helper"
-  ],
+   ```JSON
+   "addons": [
+       "@eeacms/volto-resize-helper"
+   ],
 
-  "dependencies": {
-      "@eeacms/volto-resize-helper": "^1.0.0"
-  }
-  ```
+   "dependencies": {
+       "@eeacms/volto-resize-helper": "*"
+   }
+   ```
 
-- If not, create one:
+* If not, create one:
 
-  ```
-  npm install -g yo @plone/generator-volto
-  yo @plone/volto my-volto-project --addon @eeacms/volto-resize-helper
-  cd my-volto-project
-  ```
+   ```
+   npm install -g yo @plone/generator-volto
+   yo @plone/volto my-volto-project --canary --addon @eeacms/volto-resize-helper
+   cd my-volto-project
+   ```
 
 1. Install new add-ons and restart Volto:
 
@@ -151,4 +140,3 @@ See [LICENSE.md](https://github.com/eea/volto-resize-helper/blob/master/LICENSE.
 ## Funding
 
 [European Environment Agency (EU)](http://eea.europa.eu)
-u)
