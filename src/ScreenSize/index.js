@@ -1,7 +1,6 @@
 import ScreenSize from './ScreenSize';
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default (config) => {
+const config = (config) => {
   config.settings.resizeDebounce = 350; // Measured in milliseconds
 
   config.settings.appExtras = [
@@ -14,3 +13,5 @@ export default (config) => {
 
   return config;
 };
+
+export default config;
