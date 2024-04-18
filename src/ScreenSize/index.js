@@ -1,6 +1,6 @@
 import ScreenSize from './ScreenSize';
 
-const config = (config) => {
+const applyConfig = (config) => {
   config.settings.resizeDebounce = 350; // Measured in milliseconds
 
   config.settings.appExtras = [
@@ -14,4 +14,4 @@ const config = (config) => {
   return config;
 };
 
-export default config;
+export default applyConfig;
