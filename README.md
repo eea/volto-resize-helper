@@ -3,16 +3,16 @@
 [![Releases](https://img.shields.io/github/v/release/eea/volto-resize-helper)](https://github.com/eea/volto-resize-helper/releases)
 
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-resize-helper%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-resize-helper/job/master/display/redirect)
-[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-master&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-master)
-[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-master&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-master)
-[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-master&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-master)
-[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-master&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-master)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper)
 
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-resize-helper%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-resize-helper/job/develop/display/redirect)
-[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-develop)
-[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-develop)
-[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-develop)
-[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper-develop)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper&branch=develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper&branch=develop)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper&branch=develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper&branch=develop)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper&branch=develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper&branch=develop)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-resize-helper&branch=develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-resize-helper&branch=develop)
 
 [Volto](https://github.com/plone/volto) add-on: Window resize helper
 
@@ -81,6 +81,11 @@ screen : {
 
 Go to http://localhost:3000
 
+`make start` now defaults to Volto 18. To run the same setup against Volto 17, use:
+
+      VOLTO_VERSION=17 make
+      VOLTO_VERSION=17 make start
+
 ### Add volto-resize-helper to your Volto project
 
 1. Make sure you have a [Plone backend](https://plone.org/download) up-and-running at http://localhost:8080/Plone
@@ -94,29 +99,38 @@ Go to http://localhost:3000
 * If you already have a volto project, just update `package.json`:
 
    ```JSON
-   "addons": [
-       "@eeacms/volto-resize-helper"
-   ],
-
    "dependencies": {
        "@eeacms/volto-resize-helper": "*"
    }
    ```
 
-* If not, create one:
+   and `volto.config.js`:
 
-   ```
-   npm install -g yo @plone/generator-volto
-   yo @plone/volto my-volto-project --canary --addon @eeacms/volto-resize-helper
-   cd my-volto-project
+   ```JavaScript
+   const addons = ['@eeacms/volto-resize-helper'];
    ```
 
-1. Install new add-ons and restart Volto:
+* If not, create one with Cookieplone, as recommended by the official Plone documentation for Volto 18+:
 
    ```
-   yarn
-   yarn start
+   uvx cookieplone project
+   cd project-title
    ```
+
+1. Install or update dependencies, then start the project:
+
+   ```
+   make install
+   ```
+
+   For a Cookieplone project, start the backend and frontend in separate terminals:
+
+   ```
+   make backend-start
+   make frontend-start
+   ```
+
+   For a legacy Volto 17 project, install the package with `yarn` and restart the frontend as usual.
 
 1. Go to http://localhost:3000
 
