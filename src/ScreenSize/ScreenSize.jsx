@@ -3,7 +3,7 @@ import React from 'react';
 import { compose } from 'redux';
 import cs from 'classnames';
 import config from '@plone/volto/registry';
-import { BodyClass } from '@plone/volto/helpers';
+import BodyClass from '@plone/volto/helpers/BodyClass/BodyClass';
 import { updateScreen } from '../actions';
 import { getOSName, detectTouchScreen, getBrowserToolbarWidth } from '../utils';
 import { withScreenSize } from '../hocs';
