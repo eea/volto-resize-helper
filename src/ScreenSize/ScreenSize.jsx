@@ -3,10 +3,14 @@ import React from 'react';
 import { compose } from 'redux';
 import cs from 'classnames';
 import config from '@plone/volto/registry';
-import { BodyClass } from '@plone/volto/helpers';
-import { updateScreen } from '../actions';
-import { getOSName, detectTouchScreen, getBrowserToolbarWidth } from '../utils';
-import { withScreenSize } from '../hocs';
+import BodyClass from '@plone/volto/helpers/BodyClass/BodyClass';
+import { updateScreen } from '@eeacms/volto-resize-helper/actions';
+import {
+  getOSName,
+  detectTouchScreen,
+  getBrowserToolbarWidth,
+} from '@eeacms/volto-resize-helper/utils';
+import { withScreenSize } from '@eeacms/volto-resize-helper/hocs';
 
 let timer;
 
