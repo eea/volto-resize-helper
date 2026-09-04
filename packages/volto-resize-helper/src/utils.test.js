@@ -50,7 +50,10 @@ describe('getOSName', () => {
 
 describe('detectTouchScreen', () => {
   it('should correctly detect touch screen', () => {
-    global.window = { ontouchstart: {}, TouchEvent: {} };
+    Object.defineProperty(window, 'ontouchstart', {
+      value: {},
+      configurable: true,
+    });
     expect(detectTouchScreen()).toBe(true);
 
     Object.defineProperty(window.navigator, 'msMaxTouchPoints', {
